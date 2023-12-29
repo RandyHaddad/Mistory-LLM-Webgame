@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game</title>
+</head>
+<body>
+    <h1>Mystery:</h1>
+    <p>{{ mystery.description }}</p>
+
+    <form action="{{ url_for('ask_question') }}" method="post">
+        <input type="text" name="question" placeholder="Ask a yes or no question">
+        <input type="submit" value="Ask">
+    </form>
+
+    <h2>Questions and Answers:</h2>
+    <ul>
+        {% for qa in session.qa_history %}
+            <li><b>Q:</b> {{ qa.question }} <b>A:</b> {{ qa.answer }}</li>
+        {% endfor %}
+    </ul>
+
+    <form action="{{ url_for('check_answer') }}" method="post">
+        <textarea name="interpretation" placeholder="Enter your interpretation of the mystery"></textarea>
+        <input type="submit" value="Check Answer">
+    </form>
+
+    {% if session.accuracy_rating %}
+        <h2>Your Interpretation:</h2>
+        <p>{{ session.interpretation }}</p>
+        <h2>Accuracy Rating:</h2>
+        <p>{{ session.accuracy_rating }}/100</p>
+    {% endif %}
+
+</body>
+</html>

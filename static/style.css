@@ -1,0 +1,113 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+}
+
+.wrapper {
+    text-align: center;
+    padding: 20px;
+}
+
+.top-bar {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+}
+
+.info-bar {
+    background-color: #f8f9fa;
+    padding: 5px 0;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+}
+
+.brief-description {
+    margin-bottom: 20px;
+}
+
+.message-text {
+    background-color: #eee;
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+input.word {
+    padding: 10px;
+    margin-right: 5px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.how-to-play {
+    margin-bottom: 20px;
+    text-align: left;
+    display: inline-block;
+    text-align: left;
+}
+
+.modal-title h2 {
+    margin-bottom: 5px;
+}
+
+.guess-history {
+    margin-top: 20px;
+}
+
+.label {
+    font-weight: bold;
+}
+
+/* ... Other styles ... */
+
+.row-wrapper {
+    margin-bottom: 10px;
+}
+
+.outer-bar {
+    background-color: #ddd; /* Default background for the outer bar */
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.inner-bar {
+    height: 20px; /* Fixed height for the inner bar */
+    transition: width 0.3s ease;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+    align-items: center;
+}
+
+/* You could use CSS variables or classes to define colors for different answer types */
+:root {
+    --red: #ff6961;
+    --yellow: #fdfd96;
+    --green: #77dd77;
+}
+
+/* Add classes for omitted and current row for special styling if needed */
+.row-wrapper.current .row {
+    font-weight: bold; /* Highlight the current question */
+}

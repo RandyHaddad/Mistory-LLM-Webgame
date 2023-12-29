@@ -1,0 +1,6 @@
+{"css.lint.unknownProperties": "ignore",
+"css.lint.unknownAtRules": "ignore",
+"css.validate": false,
+"scss.validate": false,
+"less.validate": false
+}

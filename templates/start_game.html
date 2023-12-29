@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MISTORI - Start Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="top-bar">
+            <div class="title">
+                <h1>MISTORI</h1>
+            </div>
+            <!-- Add other top bar content if necessary -->
+        </div>
+        <div class="info-bar">
+            <span class="label">Description:</span> <span>#{{ mystery.id }}</span>&nbsp;&nbsp;
+            <span class="label">Guesses:</span> <span>{{ session['guess_count'] | default(0) }}</span>&nbsp;&nbsp;
+        </div>
+        <div class="brief-description">
+            <div class="message-text">{{ mystery.description }}</div>
+        </div>
+        <form method="POST" action="{{ url_for('ask_question') }}">
+            <input class="word" type="text" name="question" placeholder="Ask a yes-or-no question" autocapitalize="off" autocomplete="off" enterkeyhint="send">
+            <button type="submit">Ask</button>
+        </form>
+        {% if not session['qa_history'] %}
+            <div class="how-to-play">
+                <!-- How to play content goes here -->
+                <div class="modal-title">
+                    <!-- How to play title and description -->
+                    <h2>How to play</h2>
+                    <p>
+                        Find the secret story behind the vague description, by only asking yes-or-no questions.
+                    </p>
+                    <p>
+                        The secret story has all the specific details you need to uncover. It generally includes details about the characters, location, events, and motivations.
+                    </p>
+                    <p>
+                        Behind the scenes, an artificial intelligence is provided with the solution. It answers your questions with "Yes", "No", or "Irrelevant/Ambiguous", interpreting the story as a person typically would.
+                    </p>
+                    <p>
+                        Consider the essential elements: who, what, when, where, why. Be efficient in your questions, and most importantly, think outside the box!
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+ 
+        {% if session['qa_history'] %}
+        <div class="message">
+            {% for qa in session['qa_history']|reverse %}
+            {% if loop.index == 1 %}
+            <div class="row-wrapper current">
+                <div class="outer-bar">
+                    <div class="inner-bar" style="width: 100%; background-color: {{ qa.color }};"></div>
+                </div>
+                <div class="row">
+                    <span>{{ qa.question }}</span>
+                    <span>{{ qa.answer }}</span>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- Guess history showing all previous questions and answers -->
+        <div class="guess-history">
+            {% for qa in session['qa_history'] %}
+            <div class="row-wrapper">
+                <div class="outer-bar">
+                    <div class="inner-bar" style="width: 100%; background-color: {{ qa.color }};"></div>
+                </div>
+                <div class="row">
+                    <span>{{ qa.question }}</span>
+                    <span>{{ qa.answer }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <button type="button" onclick="window.location.href='{{ url_for('reset_game') }}'">Reset Game</button>
+
+    </div>
+</body>
+</html>
