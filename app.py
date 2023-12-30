@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for
 from dotenv import load_dotenv
 from mysteries_data import mysteries
-from openai_integration import generate_response, evaluate_interpretation
+from openai_integration import omit_question, generate_response, evaluate_interpretation
 import openai
 import os
 import re
@@ -58,22 +58,35 @@ def ask_question():
     selected_mystery = session.get('selected_mystery')
     if not selected_mystery:
         return "No mystery selected."
+    
+    # Check if yes-or-no question
+    question_type, omit_cost = omit_question(question)
+    response_cost = 0
+    reasoning = ""
+    response = ""
+    no_response = True
+    if "true" not in question_type.lower():
+        response = "Omitted"
+        no_response = False
+    else:
+        # Generate the response and split it
+        response, response_cost = generate_response(question, selected_mystery)
+        split_string = re.split('Response:|Response :', response)
+        reasoning = split_string[0].strip() if len(split_string) > 1 else ""
+        response = split_string[1].strip() if len(split_string) > 1 else response.strip()
+        no_response = False
 
+    # Accumulate the cost
+    cost = omit_cost + response_cost  
 
-    # Generate the response and split it
-    response, cost = generate_response(question, selected_mystery)
-    split_string = re.split('Response:|Response :', response)
-    reasoning = split_string[0].strip() if len(split_string) > 1 else ""
-    response = split_string[1].strip() if len(split_string) > 1 else response.strip()
-  
     # Transform the response if it contains specific keywords
-    if "please ask" in response.lower():
+    if "please ask" in response.lower() or no_response or "omitted" in response.lower():
         response = "Omitted"
     elif "yes" in response.lower():
         response = "YES"
     elif "no" in response.lower():
         response = "NO"
-    elif "irrelevant" in response.lower() or "ambiguous" in response.lower():
+    else:
         response = "Irrelevant/Ambiguous"
 
     # Determine the color for the answer

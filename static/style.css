@@ -1,7 +1,7 @@
 body, html {
     height: 100%;
     margin: 0;
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Lato', sans-serif;
 }
 
 .wrapper {
@@ -10,16 +10,15 @@ body, html {
 }
 
 .top-bar {
-    background-color: #333;
-    color: white;
-    padding: 10px 0;
+    border-radius: 5px;
 }
 
 .info-bar {
-    background-color: #f8f9fa;
+    background-color: #eee;
     padding: 5px 0;
     margin-bottom: 15px;
     font-size: 0.9em;
+    border-radius: 5px;
 }
 
 .brief-description {
@@ -79,9 +78,11 @@ button:hover {
 /* ... Other styles ... */
 
 .row-wrapper {
-    margin-bottom: 10px;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+    /* Add other styling as needed */
 }
-
 .outer-bar {
     background-color: #ddd; /* Default background for the outer bar */
     border-radius: 5px;
@@ -102,9 +103,9 @@ button:hover {
 
 /* You could use CSS variables or classes to define colors for different answer types */
 :root {
-    --red: #ff6961;
-    --yellow: #fdfd96;
-    --green: #77dd77;
+    --green: #b5e2dc;
+    --yellow: #f4da92;
+    --red: #f7c0b5;
 }
 
 /* Add classes for omitted and current row for special styling if needed */

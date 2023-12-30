@@ -1,5 +1,37 @@
 from openai import OpenAI
 
+def omit_question(question):
+    system_message = {
+        'role': 'system',
+        'content': (
+            "You must determine if the message is a yes-or-no question without considering punctuation and grammar. Answer by 'True' or 'False', and nothing else."
+        )
+    }
+    # User's question
+    user_message = {
+        'role': 'user',
+        'content': question
+    }
+    # Making the API request
+    client = OpenAI()
+    model='gpt-3.5-turbo-1106'
+    response = client.chat.completions.create(
+        model = model,
+        messages=[system_message, user_message],
+        temperature=0,
+        max_tokens=256,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+    cost = openai_api_calculate_cost(response.usage, model='gpt-3.5-turbo-1106')
+    # Ensure response format is correct
+    if response and response.choices and response.choices[0].message:
+        # Extracting and returning the response
+        return response.choices[0].message.content.strip(), cost
+    else:
+        return "An error occurred while generating the response."
+
 def openai_api_calculate_cost(usage,model="gpt-4-1106-preview"):
     pricing = {
         'gpt-3.5-turbo-1106': {
@@ -25,11 +57,10 @@ def openai_api_calculate_cost(usage,model="gpt-4-1106-preview"):
     completion_cost = usage.completion_tokens * model_pricing['completion'] / 1000
 
     total_cost = prompt_cost + completion_cost
-    # round to 6 decimals
-    total_cost = round(total_cost, 6)
+    total_cost = round(total_cost, 10)
 
     print(f"\nTokens used:  {usage.prompt_tokens:,} prompt + {usage.completion_tokens:,} completion = {usage.total_tokens:,} tokens")
-    print(f"Total cost for {model}: ${total_cost:.4f}\n")
+    print(f"Total cost for {model}: ${total_cost:.7f}\n")
 
     return total_cost
 
@@ -52,9 +83,9 @@ def generate_response(question, mystery):
 
     # Making the API request
     client = OpenAI()
-
+    model='gpt-3.5-turbo-1106'
     response = client.chat.completions.create(
-        model="gpt-4-1106-preview",
+        model = model,
         messages=[system_message, user_message],
         temperature=0,
         max_tokens=256,
@@ -62,7 +93,7 @@ def generate_response(question, mystery):
         frequency_penalty=0,
         presence_penalty=0
     )
-    cost = openai_api_calculate_cost(response.usage, model="gpt-4-1106-preview")
+    cost = openai_api_calculate_cost(response.usage, model='gpt-3.5-turbo-1106')
     # Ensure response format is correct
     if response and response.choices and response.choices[0].message:
         # Extracting and returning the response

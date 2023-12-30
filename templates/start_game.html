@@ -46,15 +46,13 @@
                 </div>
             </div>
         {% endif %}
- 
+        <!-- Most recent question -->
+        <!-- Display the most recent question -->
         {% if session['qa_history'] %}
         <div class="message">
             {% for qa in session['qa_history']|reverse %}
-            {% if loop.index == 1 %}
-            <div class="row-wrapper current">
-                <div class="outer-bar">
-                    <div class="inner-bar" style="width: 100%; background-color: {{ qa.color }};"></div>
-                </div>
+            {% if loop.first %}
+            <div class="row-wrapper current" style="background-color: {{ qa.color }}; border-radius: 10px;">
                 <div class="row">
                     <span>{{ qa.question }}</span>
                     <span>{{ qa.answer }}</span>
@@ -64,14 +62,11 @@
             {% endfor %}
         </div>
         {% endif %}
-        
-        <!-- Guess history showing all previous questions and answers -->
+
+        <!-- Display the guess history with the most recent first, excluding the current question -->
         <div class="guess-history">
-            {% for qa in session['qa_history'] %}
-            <div class="row-wrapper">
-                <div class="outer-bar">
-                    <div class="inner-bar" style="width: 100%; background-color: {{ qa.color }};"></div>
-                </div>
+            {% for qa in session['qa_history'][:-1]|reverse %}
+            <div class="row-wrapper" style="background-color: {{ qa.color }}; border-radius: 10px;">
                 <div class="row">
                     <span>{{ qa.question }}</span>
                     <span>{{ qa.answer }}</span>
@@ -79,7 +74,8 @@
             </div>
             {% endfor %}
         </div>
-        
+
+
         <button type="button" onclick="window.location.href='{{ url_for('reset_game') }}'">Reset Game</button>
 
     </div>
