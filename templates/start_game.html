@@ -3,20 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MISTORI - Start Game</title>
+    <title>Mistory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="wrapper">
         <div class="top-bar">
             <div class="title">
-                <h1>MISTORI</h1>
+                <h1>
+                    Mistory
+                </h1>
             </div>
-            <!-- Add other top bar content if necessary -->
+            <!-- Dark Mode Toggle Button -->
+            <label class="switch" id="darkModeSwitch">
+                <input type="checkbox">
+                <span class="slider round"></span>
+            </label>
+            <!-- Other top bar content if necessary -->
         </div>
         <div class="info-bar">
             <span class="label">Description:</span> <span>#{{ mystery.id }}</span>&nbsp;&nbsp;
-            <span class="label">Guesses:</span> <span>{{ session['guess_count'] | default(0) }}</span>&nbsp;&nbsp;
+            <span class="label">Questions:</span> <span>{{ session.get('guess_count', 0) }}</span>&nbsp;&nbsp;
         </div>
         <div class="brief-description">
             <div class="message-text">{{ mystery.description }}</div>
@@ -26,33 +34,61 @@
             <button type="submit">Ask</button>
         </form>
         {% if not session['qa_history'] %}
-            <div class="how-to-play">
-                <!-- How to play content goes here -->
-                <div class="modal-title">
-                    <!-- How to play title and description -->
-                    <h2>How to play</h2>
-                    <p>
-                        Find the secret story behind the vague description, by only asking yes-or-no questions.
-                    </p>
-                    <p>
-                        The secret story has all the specific details you need to uncover. It generally includes details about the characters, location, events, and motivations.
-                    </p>
-                    <p>
-                        Behind the scenes, an artificial intelligence is provided with the solution. It answers your questions with "Yes", "No", or "Irrelevant/Ambiguous", interpreting the story as a person typically would.
-                    </p>
-                    <p>
-                        Consider the essential elements: who, what, when, where, why. Be efficient in your questions, and most importantly, think outside the box!
-                    </p>
+        <div class="collapsible-sections">
+            <!-- How to Play -->
+            <div class="row-wrapper collapsible">
+                <div class="row collapsible-header" data-target="howToPlayContent">
+                    <span>How to Play</span><span class="expand-icon">...</span>
+                </div>
+                <div id="howToPlayContent" class="collapsible-content">
+                    <p>Find the secret story behind the vague description, by only asking yes-or-no questions.</p>
+                    <p>The secret story has all the specific details you need to uncover. It generally includes details about the characters, location, events, and motivations.</p>
+                    <p>Behind the scenes, an artificial intelligence is provided with the solution. It answers your questions with "Yes", "No", or "Irrelevant/Ambiguous", interpreting the story as a person typically would.</p>
+                    <p>Consider the essential elements: who, what, when, where, why. Be efficient in your questions, and most importantly, think outside the box!</p>
                 </div>
             </div>
+        
+            <!-- How is the Answer Evaluated? -->
+            <div class="row-wrapper collapsible">
+                <div class="row collapsible-header" data-target="answerEvalContent">
+                    <span>How is the Answer Evaluated?</span><span class="expand-icon">...</span>
+                </div>
+                <div id="answerEvalContent" class="collapsible-content">
+                    <!-- Answer Evaluation content goes here -->
+                </div>
+            </div>
+        
+            <!-- Tips and Tricks -->
+            <div class="row-wrapper collapsible">
+                <div class="row collapsible-header" data-target="tipsTricksContent">
+                    <span>Tips and Tricks</span><span class="expand-icon">...</span>
+                </div>
+                <div id="tipsTricksContent" class="collapsible-content">
+                    <!-- Tips and Tricks content goes here -->
+                </div>
+            </div>
+        
+            <!-- Credits -->
+            <div class="row-wrapper collapsible">
+                <div class="row collapsible-header" data-target="creditsContent">
+                    <span>Credits</span><span class="expand-icon">...</span>
+                </div>
+                <div id="creditsContent" class="collapsible-content">
+                    <!-- Credits content goes here -->
+                </div>
+            </div>
+        </div>
+        
         {% endif %}
-        <!-- Most recent question -->
+    
+    
+
         <!-- Display the most recent question -->
         {% if session['qa_history'] %}
         <div class="message">
             {% for qa in session['qa_history']|reverse %}
             {% if loop.first %}
-            <div class="row-wrapper current" style="background-color: {{ qa.color }}; border-radius: 10px;">
+            <div class="row-wrapper current {{ qa.css_class }}" style="border-radius: 10px;">
                 <div class="row">
                     <span>{{ qa.question }}</span>
                     <span>{{ qa.answer }}</span>
@@ -61,12 +97,11 @@
             {% endif %}
             {% endfor %}
         </div>
-        {% endif %}
 
         <!-- Display the guess history with the most recent first, excluding the current question -->
         <div class="guess-history">
             {% for qa in session['qa_history'][:-1]|reverse %}
-            <div class="row-wrapper" style="background-color: {{ qa.color }}; border-radius: 10px;">
+            <div class="row-wrapper {{ qa.css_class }}" style="border-radius: 10px;">
                 <div class="row">
                     <span>{{ qa.question }}</span>
                     <span>{{ qa.answer }}</span>
@@ -74,10 +109,31 @@
             </div>
             {% endfor %}
         </div>
+        {% endif %}
 
 
         <button type="button" onclick="window.location.href='{{ url_for('reset_game') }}'">Reset Game</button>
-
+        
+        <button type="button" id="checkAnswerButton">Check Your Answer</button>
+        
+        <div id="answerModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="submitAnswerSection">
+                    <form id="answerForm" method="POST" action="{{ url_for('check_answer') }}">
+                        <textarea name="interpretation" placeholder="Enter your version of the story..."></textarea>
+                        <button type="submit">Submit Answer</button>
+                    </form>
+                </div>
+                <div id="resultSection" style="display: none;">
+                    <!-- Result content will be populated here -->
+                </div>
+            </div>
+        </div>
+        
+        
     </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

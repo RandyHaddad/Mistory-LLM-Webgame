@@ -3,6 +3,7 @@ mysteries = {
         'id':'1',
         'description': "A woman - at work - is going downstairs, when suddenly there is a blackout. In that very moment she realizes that her husband is about to die.",
         'solution': "The woman worked as an electrician at a hospital and she knew that the emergency generators were broken. He husband had had a car crash and he was at that hospital, connected to a machine that kept him alive. When the blackout happened she knew that her husband couldn't be breathing by himself and therefore that he was dying.", 
+        'image_url': '/static/images/mystery1.jpg',
         'description_tokens': 31,
         'solution_tokens': 65, 
     },

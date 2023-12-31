@@ -33,23 +33,27 @@ def start_game():
         difficulty = request.form['difficulty']
         session['selected_mystery'] = mysteries[difficulty]
         session['qa_history'] = []  # Initialize or reset the Q&A history
-
+        session['guess_count'] = 0
+        
     selected_mystery = session.get('selected_mystery')
+
+    if 'qa_history' not in session:
+        session['qa_history'] = []  # Initialize qa_history if not present
+
     if not selected_mystery:
         return "Invalid Access"
 
     # Render the game template whether it's a POST or GET request
     return render_template('start_game.html', game_title="MISTORI", mystery=selected_mystery)
 
-def get_color_for_answer(answer):
-    # Define your color logic here
-    colors = {
-        'YES': 'var(--green)',
-        'NO': 'var(--red)',
-        'Irrelevant/Ambiguous': 'var(--yellow)',
-        'Omitted': '#fff'
+def get_css_class_for_answer(answer):
+    classes = {
+        'YES': 'answer-yes',
+        'NO': 'answer-no',
+        'Irrelevant': 'answer-irrelevant',
+        'Omitted': 'answer-omitted'
     }
-    return colors.get(answer, '#fff')  # Default to white if answer not in dictionary
+    return classes.get(answer, 'answer-default')
 
 
 @app.route('/ask_question', methods=['POST'])
@@ -87,23 +91,24 @@ def ask_question():
     elif "no" in response.lower():
         response = "NO"
     else:
-        response = "Irrelevant/Ambiguous"
+        response = "Irrelevant"
 
-    # Determine the color for the answer
-    color = get_color_for_answer(response)
+    # Print reasoning to terminal
+    print("Reasoning:", reasoning)
 
     # Get the current QA history from the session, or initialize if not present
     qa_history = session.get('qa_history', [])
     qa_history.append({
         'question': question, 
-        'answer': response, 
+        'answer': response,
+        'css_class': get_css_class_for_answer(response), 
         'reasoning': reasoning,
-        'color': color  # Add the color to the QA history
     })
 
     # Update the session
     session['qa_history'] = qa_history
-
+    session['guess_count'] = session.get('guess_count', 0) + 1
+    
     # Log the interaction with cost
     log_entry = f"Question: {question}, AI Response: {response}, AI Reasoning: {reasoning}"
     log_interaction(log_entry, cost)
@@ -111,12 +116,14 @@ def ask_question():
     # Redirect back to the game page with updated session data
     return redirect(url_for('start_game'))
 
+from flask import jsonify
+
 @app.route('/check_answer', methods=['POST'])
 def check_answer():
     interpretation = request.form['interpretation']
     selected_mystery = session.get('selected_mystery')
     if not selected_mystery:
-        return "No mystery selected."
+        return jsonify({'error': "No mystery selected."}), 400
 
     # Call a function to evaluate the interpretation and split it
     accuracy, cost = evaluate_interpretation(interpretation, selected_mystery['solution'])
@@ -133,16 +140,22 @@ def check_answer():
     log_entry = f"Interpretation: {interpretation}, AI Evaluation: {accuracy}"
     log_interaction(log_entry, cost)
 
-    # Redirect back to the game page with updated session data
-    return redirect(url_for('start_game'))
+    # Prepare the data to be returned
+    response_data = {
+        'accuracy_rating': accuracy_rating,
+        'solution_image_url': selected_mystery.get('image_url', ''), # Assuming the mystery has an image URL
+        'solution_text': selected_mystery.get('solution', ''),
+        'reasoning': accuracy_reasoning
+    }
+
+    return jsonify(response_data)
 
 @app.route('/reset_game')
 def reset_game():
-    # Clear the game-related session data
-    if 'qa_history' in session:
-        session.pop('qa_history')
+    session.pop('qa_history', None)  # Remove qa_history from session
+    session['guess_count'] = 0       # Reset guess count
+    # Add any other session variables that need resetting
 
-    # Redirect to the start game page
     return redirect(url_for('start_game'))
 
 if __name__ == '__main__':

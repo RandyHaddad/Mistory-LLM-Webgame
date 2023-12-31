@@ -69,11 +69,17 @@ def generate_response(question, mystery):
     system_message = {
         'role': 'system',
         'content': (
-            "You are an AI helping to narrate a 'Dark Stories' game. Answer yes-or-no questions based on the following information. There are two sections, 'Reasoning' and 'Response'. In the 'Response' section, respond only with 'Yes', 'No', 'Irrelevant/Ambiguous', 'Please ask a yes-or-no question'. You must NEVER respond with anything else, not even hello. In the 'Reasoning' section, provide a justification for your answer."
-            f"Description given to the player: {mystery['description']} Solution that only you know and that you will base your answers on: {mystery['solution']}"
+            "You are an AI helping to narrate a 'Dark Stories' game. Answer yes-or-no questions based on the following information." 
+            "There are two sections, 'Reasoning' and 'Response'. In the 'Response' section, respond only with 'Yes', 'No', 'Irrelevant/Ambiguous', 'Please ask a yes-or-no question'. " 
+            "You must NEVER respond with anything else, not even hello. " 
+            "In the 'Reasoning' section, ALWAYS provide a justification for your answer."
             "Your answer should ALWAYS follow the following format, even when there's an error: 'Reasoning : ... /n Response : ...'"
+            f"Description given to the player: {mystery['description']}"
+            f"Solution that your answer depends on (EVERY WORD IS VERY IMPORTANT): {mystery['solution']}"
         )
     }
+
+    print(system_message)
 
     # User's question
     user_message = {
@@ -84,16 +90,17 @@ def generate_response(question, mystery):
     # Making the API request
     client = OpenAI()
     model='gpt-3.5-turbo-1106'
+    #model="gpt-4-1106-preview"
     response = client.chat.completions.create(
         model = model,
         messages=[system_message, user_message],
-        temperature=0,
+        temperature=0.7,
         max_tokens=256,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0
     )
-    cost = openai_api_calculate_cost(response.usage, model='gpt-3.5-turbo-1106')
+    cost = openai_api_calculate_cost(response.usage, model=model)
     # Ensure response format is correct
     if response and response.choices and response.choices[0].message:
         # Extracting and returning the response
@@ -119,9 +126,10 @@ def evaluate_interpretation(interpretation, solution):
     }
 
     client = OpenAI()
-
+    model='gpt-3.5-turbo-1106'
+    #model="gpt-4-1106-preview"
     response = client.chat.completions.create(
-        model="gpt-4-1106-preview",
+        model=model,
         messages=[system_message, user_message],
         temperature=0,
         max_tokens=256,
@@ -129,7 +137,7 @@ def evaluate_interpretation(interpretation, solution):
         frequency_penalty=0,
         presence_penalty=0
     )
-    cost = openai_api_calculate_cost(response.usage, model="gpt-4-1106-preview")
+    cost = openai_api_calculate_cost(response.usage, model=model)
     # Ensure response format is correct
     if response and response.choices and response.choices[0].message:
         # Extracting and returning the response

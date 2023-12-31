@@ -1,7 +1,39 @@
+/* Base Styles */
+:root {
+    --primary-bg-color-light: #eee;
+    --primary-bg-color-dark: #252525;
+    --primary-text-color-light: #000;
+    --primary-text-color-dark: #fff;
+    --teal: #01717a;
+    --green: #84a8aa;
+    --green-dark: #00484e;
+    --grey: #ccc;
+    --grey-dark: #696868;
+    --yellow: #f4da92;
+    --yellow-dark: #fcc11e;
+    --red: #f7c0b5;
+    --red-dark: #eb7373;
+}
+
+/* Light Mode Colors */
+.answer-yes { background-color: var(--green); }
+.answer-no { background-color: var(--red); }
+.answer-irrelevant { background-color: var(--yellow); }
+.answer-omitted { background-color: var(--grey); }
+
+/* Dark Mode Colors */
+.dark-mode .answer-yes { background-color: var(--green-dark); }
+.dark-mode .answer-no { background-color: var(--red-dark); }
+.dark-mode .answer-irrelevant { background-color: var(--yellow-dark); }
+.dark-mode .answer-omitted { background-color: var(--grey-dark); }
+
 body, html {
     height: 100%;
+    min-height: 100vh;
     margin: 0;
-    font-family: 'Lato', sans-serif;
+    font-family: 'Ubuntu', sans-serif;
+    background-color: var(--primary-bg-color-light);
+    color: var(--primary-text-color-light);
 }
 
 .wrapper {
@@ -9,88 +41,70 @@ body, html {
     padding: 20px;
 }
 
-.top-bar {
-    border-radius: 5px;
-}
-
-.info-bar {
-    background-color: #eee;
+/* Header and Info Styles */
+.top-bar, .info-bar {
     padding: 5px 0;
     margin-bottom: 15px;
     font-size: 0.9em;
     border-radius: 5px;
 }
 
-.brief-description {
-    margin-bottom: 20px;
-}
-
-.message-text {
-    background-color: #eee;
-    padding: 10px;
-    border-radius: 5px;
-    display: inline-block;
-}
-
-form {
-    margin-bottom: 20px;
-}
-
-input.word {
-    padding: 10px;
-    margin-right: 5px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-}
-
-button {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-.how-to-play {
-    margin-bottom: 20px;
-    text-align: left;
-    display: inline-block;
-    text-align: left;
-}
-
-.modal-title h2 {
-    margin-bottom: 5px;
-}
-
-.guess-history {
-    margin-top: 20px;
-}
-
 .label {
     font-weight: bold;
 }
 
-/* ... Other styles ... */
+/* Form and Input Styles */
+form {
+    margin-bottom: 20px;
+}
 
+input.word, button {
+    padding: 10px;
+    margin-right: 5px;
+    border-radius: 5px;
+}
+
+input.word {
+    border: 1px solid #ddd;
+}
+
+button {
+    background-color: var(--teal);
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: var(--green-dark);
+}
+
+/* Content Styles */
+.brief-description, .how-to-play, .guess-history {
+    margin-bottom: 20px;
+}
+
+.message-text {
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+/* Row and Bar Styles */
 .row-wrapper {
     padding: 10px;
     margin-bottom: 5px;
     border-radius: 10px;
-    /* Add other styling as needed */
 }
+
 .outer-bar {
-    background-color: #ddd; /* Default background for the outer bar */
+    background-color: #ddd;
     border-radius: 5px;
     overflow: hidden;
 }
 
 .inner-bar {
-    height: 20px; /* Fixed height for the inner bar */
+    height: 20px;
     transition: width 0.3s ease;
 }
 
@@ -99,16 +113,221 @@ button:hover {
     justify-content: space-between;
     padding: 5px 10px;
     align-items: center;
+    text-align: left;
 }
 
-/* You could use CSS variables or classes to define colors for different answer types */
-:root {
-    --green: #b5e2dc;
-    --yellow: #f4da92;
-    --red: #f7c0b5;
+.row span:first-child {
+    text-align: left;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Add classes for omitted and current row for special styling if needed */
-.row-wrapper.current .row {
-    font-weight: bold; /* Highlight the current question */
+.row span:last-child {
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Highlight Current Question */
+.row-wrapper.current {
+    border: 2px solid black; /* Adding black border */
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: var(--primary-bg-color-dark);
+    color: var(--primary-text-color-dark);
+    min-height: 100vh; /* Ensure it covers the entire viewport height */
+}
+
+.dark-mode .top-bar, 
+.dark-mode .info-bar, 
+.dark-mode .message-text, {
+    background-color: var(--primary-bg-color-dark);
+}
+
+.dark-mode .wrapper {
+    background-color: var(--primary-bg-color-dark);
+}
+
+.dark-mode button {
+    background-color: #333;
+    color: #fff;
+}
+
+.dark-mode button:hover {
+    background-color: #555;
+}
+
+.dark-mode input.word {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #555;
+}
+
+.dark-mode .row-wrapper.current {
+    border: 2px solid #ffffff; /* Example: white border for dark mode */
+}
+
+/* Toggle Switch Styles */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #444;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #444;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+#darkModeSwitch {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+/* General Styles for Collapsible Sections */
+.collapsible {
+    cursor: pointer;
+    margin-bottom: 5px; /* Adjust as needed */
+    border-radius: 10px; /* Match your row styling */
+    background-color: var(--grey); /* Adjust for light mode */
+}
+
+.collapsible-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px; /* Match your row padding */
+}
+
+.collapsible-header .expand-icon {
+    /* Style for the ellipsis icon */
+    font-size: 1.2em;
+}
+
+.collapsible-content {
+    padding: 10px;
+    text-align: left;
+    border-top: 1px solid #ddd; /* Optional divider line */
+    display: none; /* Initially hidden */
+}
+
+/* Dark Mode Adjustments */
+.dark-mode .collapsible {
+    background-color: var(--grey-dark);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Add styles for textarea and button inside modal */
+.modal-content textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.modal-content button {
+    background-color: #04AA6D;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.modal-content button:hover {
+    opacity: 0.8;
+}
+
+.solution-visualization img {
+    max-width: 100%; /* Makes sure the image is not wider than its container */
+    max-height: 400px; /* Adjust the max height to fit within the modal */
+    object-fit: contain; /* Ensures the aspect ratio is maintained */
+    margin: auto; /* Centers the image */
+    display: block; /* Ensures the image is block level to center properly */
 }
