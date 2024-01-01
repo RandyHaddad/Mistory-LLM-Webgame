@@ -34,7 +34,8 @@ def start_game():
         session['selected_mystery'] = mysteries[difficulty]
         session['qa_history'] = []  # Initialize or reset the Q&A history
         session['guess_count'] = 0
-        
+        session['questions_left'] = 15
+
     selected_mystery = session.get('selected_mystery')
 
     if 'qa_history' not in session:
@@ -108,6 +109,7 @@ def ask_question():
     # Update the session
     session['qa_history'] = qa_history
     session['guess_count'] = session.get('guess_count', 0) + 1
+    session['questions_asked'] = session.get('questions_asked', 0) + 1
     
     # Log the interaction with cost
     log_entry = f"Question: {question}, AI Response: {response}, AI Reasoning: {reasoning}"
@@ -157,6 +159,13 @@ def reset_game():
     # Add any other session variables that need resetting
 
     return redirect(url_for('start_game'))
+
+# Route to add more questions after watching an ad
+@app.route('/add_questions')
+def add_questions():
+    session['questions_asked'] = 0  # Reset questions asked or add more
+    return redirect(url_for('start_game'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)

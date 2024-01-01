@@ -95,7 +95,7 @@ def generate_response(question, mystery):
         model = model,
         messages=[system_message, user_message],
         temperature=0.7,
-        max_tokens=256,
+        max_tokens=128,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0
@@ -132,7 +132,7 @@ def evaluate_interpretation(interpretation, solution):
         model=model,
         messages=[system_message, user_message],
         temperature=0,
-        max_tokens=256,
+        max_tokens=128,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0

@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Retrieve initial questions asked count from the HTML data attribute
+    const initialQuestionsAsked = document.body.getAttribute('data-questions-asked');
+    localStorage.setItem('questions_asked', initialQuestionsAsked);
+
     // Function to toggle dark mode
     function toggleDarkMode(isDarkMode) {
         var body = document.body;
@@ -87,5 +91,61 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.error('Error:', error);
         });
+        
     });
+
+    // Update questions left count
+    updateQuestionsLeft();
+    
+    // Function to open the ad modal
+    function openAdModal() {
+        const adModal = document.getElementById('adModal');
+        adModal.style.display = 'block';
+    }
+
+        // Function to close the ad modal
+        function closeModal() {
+            const adModal = document.getElementById('adModal');
+            adModal.style.display = 'none';
+        }
+    
+        // Event listener for the "Get More Questions" button
+        const getMoreQuestionsBtn = document.getElementById('getMoreQuestionsButton');
+        if (getMoreQuestionsBtn) {
+            getMoreQuestionsBtn.addEventListener('click', openAdModal);
+        }
+    
+        // Event listener for the "Skip Ad" button
+        const skipAdButton = document.getElementById('skipAdButton');
+        if (skipAdButton) {
+            skipAdButton.addEventListener('click', function() {
+                localStorage.setItem('questions_asked', '0');
+                updateQuestionsLeft();
+                closeModal();
+            });
+        }
+    
+        // Get the <span> element that closes the ad modal and add event listener
+        const closeAdSpan = document.querySelector('#adModal .close');
+        if (closeAdSpan) {
+            closeAdSpan.addEventListener('click', closeModal);
+        }
+    
+        // Event listener to close ad modal when clicking outside of it
+        window.addEventListener('click', function(event) {
+            const adModal = document.getElementById('adModal');
+            if (event.target === adModal) {
+                closeModal();
+            }
+        });
+    
+        // Initial update for questions left
+        updateQuestionsLeft();
+    // Function to update the number of questions left in the info bar
+    
+    function updateQuestionsLeft() {
+        const questionsLeft = 15 - parseInt(localStorage.getItem('questions_asked') || '0');
+        document.querySelector('.info-bar .questions-left').textContent = `${questionsLeft} questions left`;
+    }
+
 });

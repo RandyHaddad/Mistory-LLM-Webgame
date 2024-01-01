@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+<body data-questions-asked="{{ session.get('questions_asked', 0) }}">
     <div class="wrapper">
         <div class="top-bar">
             <div class="title">
@@ -25,14 +25,37 @@
         <div class="info-bar">
             <span class="label">Description:</span> <span>#{{ mystery.id }}</span>&nbsp;&nbsp;
             <span class="label">Questions:</span> <span>{{ session.get('guess_count', 0) }}</span>&nbsp;&nbsp;
+            <span class="label">Questions Left:</span>
+            <span class="questions-left"></span>
         </div>
         <div class="brief-description">
             <div class="message-text">{{ mystery.description }}</div>
         </div>
-        <form method="POST" action="{{ url_for('ask_question') }}">
-            <input class="word" type="text" name="question" placeholder="Ask a yes-or-no question" autocapitalize="off" autocomplete="off" enterkeyhint="send">
-            <button type="submit">Ask</button>
-        </form>
+
+        {% if session.get('questions_asked', 0) < 15 %}
+            <form method="POST" action="{{ url_for('ask_question') }}">
+                <input class="word" type="text" name="question" placeholder="Ask a yes-or-no question" autocapitalize="off" autocomplete="off" enterkeyhint="send" maxlength="70">
+                <button type="submit">Ask</button>
+            </form>
+        {% else %}
+            <!-- Get more questions button -->
+            <button id="getMoreQuestionsButton">Get More Questions</button>
+        {% endif %}
+
+        <!-- Ad Modal -->
+        <div id="adModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="adContent">
+                    <!-- Placeholder for ad -->
+                    <p>YOUR VIDEO AD</p>
+                    <button id="skipAdButton" onclick="location.href='{{ url_for('add_questions') }}'">Skip Ad</button>
+                </div>
+            </div>
+        </div>
+
+
         {% if not session['qa_history'] %}
         <div class="collapsible-sections">
             <!-- How to Play -->
@@ -122,7 +145,7 @@
                 <span class="close">&times;</span>
                 <div id="submitAnswerSection">
                     <form id="answerForm" method="POST" action="{{ url_for('check_answer') }}">
-                        <textarea name="interpretation" placeholder="Enter your version of the story..."></textarea>
+                        <textarea name="interpretation" placeholder="Enter your version of the story..." maxlength="{{ mystery.solution|length }}"></textarea>
                         <button type="submit">Submit Answer</button>
                     </form>
                 </div>
@@ -131,7 +154,6 @@
                 </div>
             </div>
         </div>
-        
         
     </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
