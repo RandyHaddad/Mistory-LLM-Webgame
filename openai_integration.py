@@ -4,9 +4,10 @@ def omit_question(question):
     system_message = {
         'role': 'system',
         'content': (
-            "You must determine if the message is a yes-or-no question without considering punctuation and grammar. Answer by 'True' or 'False', and nothing else."
+            "Determine if the user message could be a yes-or-no question. Say true if yes, false if not. Ignore the spelling."
         )
     }
+    question = question + "?"
     # User's question
     user_message = {
         'role': 'user',
@@ -70,7 +71,9 @@ def generate_response(question, mystery):
         'role': 'system',
         'content': (
             "You are an AI helping to narrate a 'Dark Stories' game. Answer yes-or-no questions based on the following information." 
-            "There are two sections, 'Reasoning' and 'Response'. In the 'Response' section, respond only with 'Yes', 'No', 'Irrelevant/Ambiguous', 'Please ask a yes-or-no question'. " 
+            "There are two sections, 'Reasoning' and 'Response'. In the 'Response' section, respond only with 'Yes', 'No', "
+            "'Irrelevant', 'Ambiguous', or 'Omitted'. " 
+            "Answer 'Omitted' when it's not a yes-or-no question. "
             "You must NEVER respond with anything else, not even hello. " 
             "In the 'Reasoning' section, ALWAYS provide a justification for your answer."
             "Your answer should ALWAYS follow the following format, even when there's an error: 'Reasoning : ... /n Response : ...'"

@@ -8,153 +8,162 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body data-questions-asked="{{ session.get('questions_asked', 0) }}">
-    <div class="wrapper">
-        <div class="top-bar">
-            <div class="title">
-                <h1>
-                    Mistory
-                </h1>
-            </div>
-            <!-- Dark Mode Toggle Button -->
-            <label class="switch" id="darkModeSwitch">
-                <input type="checkbox">
-                <span class="slider round"></span>
-            </label>
-            <!-- Other top bar content if necessary -->
-        </div>
-        <div class="info-bar">
-            <span class="label">Description:</span> <span>#{{ mystery.id }}</span>&nbsp;&nbsp;
-            <span class="label">Questions:</span> <span>{{ session.get('guess_count', 0) }}</span>&nbsp;&nbsp;
-            <span class="label">Questions Left:</span>
-            <span class="questions-left"></span>
-        </div>
-        <div class="brief-description">
-            <div class="message-text">{{ mystery.description }}</div>
-        </div>
-
-        {% if session.get('questions_asked', 0) < 15 %}
-            <form method="POST" action="{{ url_for('ask_question') }}">
-                <input class="word" type="text" name="question" placeholder="Ask a yes-or-no question" autocapitalize="off" autocomplete="off" enterkeyhint="send" maxlength="70">
-                <button type="submit">Ask</button>
-            </form>
-        {% else %}
-            <!-- Get more questions button -->
-            <button id="getMoreQuestionsButton">Get More Questions</button>
-        {% endif %}
-
-        <!-- Ad Modal -->
-        <div id="adModal" class="modal">
-            <!-- Modal content -->
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <div id="adContent">
-                    <!-- Placeholder for ad -->
-                    <p>YOUR VIDEO AD</p>
-                    <button id="skipAdButton" onclick="location.href='{{ url_for('add_questions') }}'">Skip Ad</button>
-                </div>
-            </div>
-        </div>
-
-
-        {% if not session['qa_history'] %}
-        <div class="collapsible-sections">
-            <!-- How to Play -->
-            <div class="row-wrapper collapsible">
-                <div class="row collapsible-header" data-target="howToPlayContent">
-                    <span>How to Play</span><span class="expand-icon">...</span>
-                </div>
-                <div id="howToPlayContent" class="collapsible-content">
-                    <p>Find the secret story behind the vague description, by only asking yes-or-no questions.</p>
-                    <p>The secret story has all the specific details you need to uncover. It generally includes details about the characters, location, events, and motivations.</p>
-                    <p>Behind the scenes, an artificial intelligence is provided with the solution. It answers your questions with "Yes", "No", or "Irrelevant/Ambiguous", interpreting the story as a person typically would.</p>
-                    <p>Consider the essential elements: who, what, when, where, why. Be efficient in your questions, and most importantly, think outside the box!</p>
-                </div>
-            </div>
-        
-            <!-- How is the Answer Evaluated? -->
-            <div class="row-wrapper collapsible">
-                <div class="row collapsible-header" data-target="answerEvalContent">
-                    <span>How is the Answer Evaluated?</span><span class="expand-icon">...</span>
-                </div>
-                <div id="answerEvalContent" class="collapsible-content">
-                    <!-- Answer Evaluation content goes here -->
-                </div>
-            </div>
-        
-            <!-- Tips and Tricks -->
-            <div class="row-wrapper collapsible">
-                <div class="row collapsible-header" data-target="tipsTricksContent">
-                    <span>Tips and Tricks</span><span class="expand-icon">...</span>
-                </div>
-                <div id="tipsTricksContent" class="collapsible-content">
-                    <!-- Tips and Tricks content goes here -->
-                </div>
-            </div>
-        
-            <!-- Credits -->
-            <div class="row-wrapper collapsible">
-                <div class="row collapsible-header" data-target="creditsContent">
-                    <span>Credits</span><span class="expand-icon">...</span>
-                </div>
-                <div id="creditsContent" class="collapsible-content">
-                    <!-- Credits content goes here -->
-                </div>
-            </div>
-        </div>
-        
-        {% endif %}
+    <!-- Top Ad Placeholder -->
+    <div class="ad-placeholder top-ad">YOUR AD</div>
     
-    
-
-        <!-- Display the most recent question -->
-        {% if session['qa_history'] %}
-        <div class="message">
-            {% for qa in session['qa_history']|reverse %}
-            {% if loop.first %}
-            <div class="row-wrapper current {{ qa.css_class }}" style="border-radius: 10px;">
-                <div class="row">
-                    <span>{{ qa.question }}</span>
-                    <span>{{ qa.answer }}</span>
+    <div class="main-content-wrapper">
+        <!-- Left Side Ad Placeholder -->
+        <div class="ad-placeholder side-ad left-ad">YOUR AD</div>
+        <div class="wrapper">
+            <div class="top-bar">
+                <div class="title">
+                    <h1>
+                        Mistory
+                    </h1>
                 </div>
+                <!-- Dark Mode Toggle Button -->
+                <label class="switch" id="darkModeSwitch">
+                    <input type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+                <!-- Other top bar content if necessary -->
+            </div>
+            <div class="info-bar">
+                <span class="label">Description:</span> <span>#{{ mystery.id }}</span>&nbsp;&nbsp;
+                <span class="label">Questions:</span> <span>{{ session.get('guess_count', 0) }}</span>&nbsp;&nbsp;
+                <span class="label">Remaining:</span>
+                <span class="questions-left"></span>
+            </div>
+            <div class="brief-description">
+                <div class="message-text">{{ mystery.description }}</div>
+            </div>
+
+            {% if session.get('questions_asked', 0) < 15 %}
+                <form method="POST" action="{{ url_for('ask_question') }}">
+                    <input class="word" type="text" name="question" placeholder="Ask a yes-or-no question" autocapitalize="off" autocomplete="off" enterkeyhint="send" maxlength="70">
+                    <button type="submit">Ask</button>
+                </form>
+            {% else %}
+                <!-- Get more questions button -->
+                <button id="getMoreQuestionsButton">Get More Questions</button>
+            {% endif %}
+
+            <!-- Ad Modal -->
+            <div id="adModal" class="modal">
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <div id="adContent">
+                        <!-- Placeholder for ad -->
+                        <p>YOUR VIDEO AD</p>
+                        <button id="skipAdButton" onclick="location.href='{{ url_for('add_questions') }}'">Skip Ad</button>
+                    </div>
+                </div>
+            </div>
+
+
+            {% if not session['qa_history'] %}
+            <div class="collapsible-sections">
+                <!-- How to Play -->
+                <div class="row-wrapper collapsible">
+                    <div class="row collapsible-header" data-target="howToPlayContent">
+                        <span>How to Play</span><span class="expand-icon">...</span>
+                    </div>
+                    <div id="howToPlayContent" class="collapsible-content">
+                        <p>Find the secret story behind the vague description, by only asking yes-or-no questions.</p>
+                        <p>The secret story has all the specific details you need to uncover. It generally includes details about the characters, location, events, and motivations.</p>
+                        <p>Behind the scenes, an artificial intelligence is provided with the solution. It answers your questions with "Yes", "No", "Irrelevant", or "Ambiguous"; it interprets the story as a person typically would.</p>
+                        <p>Consider the essential elements: who, what, when, where, why. Be efficient in your questions, and most importantly, think outside the box!</p>
+                    </div>
+                </div>
+            
+                <!-- How is the Answer Evaluated? -->
+                <div class="row-wrapper collapsible">
+                    <div class="row collapsible-header" data-target="answerEvalContent">
+                        <span>How is the Answer Evaluated?</span><span class="expand-icon">...</span>
+                    </div>
+                    <div id="answerEvalContent" class="collapsible-content">
+                        <!-- Answer Evaluation content goes here -->
+                    </div>
+                </div>
+            
+                <!-- Tips and Tricks -->
+                <div class="row-wrapper collapsible">
+                    <div class="row collapsible-header" data-target="tipsTricksContent">
+                        <span>Tips and Tricks</span><span class="expand-icon">...</span>
+                    </div>
+                    <div id="tipsTricksContent" class="collapsible-content">
+                        <!-- Tips and Tricks content goes here -->
+                    </div>
+                </div>
+            
+                <!-- Credits -->
+                <div class="row-wrapper collapsible">
+                    <div class="row collapsible-header" data-target="creditsContent">
+                        <span>Credits</span><span class="expand-icon">...</span>
+                    </div>
+                    <div id="creditsContent" class="collapsible-content">
+                        <!-- Credits content goes here -->
+                    </div>
+                </div>
+            </div>
+            
+            {% endif %}
+        
+        
+
+            <!-- Display the most recent question -->
+            {% if session['qa_history'] %}
+            <div class="message">
+                {% for qa in session['qa_history']|reverse %}
+                {% if loop.first %}
+                <div class="row-wrapper current {{ qa.css_class }}" style="border-radius: 10px;">
+                    <div class="row">
+                        <span>{{ qa.question }}</span>
+                        <span>{{ qa.answer }}</span>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- Display the guess history with the most recent first, excluding the current question -->
+            <div class="guess-history">
+                {% for qa in session['qa_history'][:-1]|reverse %}
+                <div class="row-wrapper {{ qa.css_class }}" style="border-radius: 10px;">
+                    <div class="row">
+                        <span>{{ qa.question }}</span>
+                        <span>{{ qa.answer }}</span>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
             {% endif %}
-            {% endfor %}
-        </div>
-
-        <!-- Display the guess history with the most recent first, excluding the current question -->
-        <div class="guess-history">
-            {% for qa in session['qa_history'][:-1]|reverse %}
-            <div class="row-wrapper {{ qa.css_class }}" style="border-radius: 10px;">
-                <div class="row">
-                    <span>{{ qa.question }}</span>
-                    <span>{{ qa.answer }}</span>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        {% endif %}
 
 
-        <button type="button" onclick="window.location.href='{{ url_for('reset_game') }}'">Reset Game</button>
-        
-        <button type="button" id="checkAnswerButton">Check Your Answer</button>
-        
-        <div id="answerModal" class="modal">
-            <!-- Modal content -->
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <div id="submitAnswerSection">
-                    <form id="answerForm" method="POST" action="{{ url_for('check_answer') }}">
-                        <textarea name="interpretation" placeholder="Enter your version of the story..." maxlength="{{ mystery.solution|length }}"></textarea>
-                        <button type="submit">Submit Answer</button>
-                    </form>
-                </div>
-                <div id="resultSection" style="display: none;">
-                    <!-- Result content will be populated here -->
+            <button type="button" onclick="window.location.href='{{ url_for('reset_game') }}'">Reset Game</button>
+            
+            <button type="button" id="checkAnswerButton">Check Your Answer</button>
+            
+            <div id="answerModal" class="modal">
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <div id="submitAnswerSection">
+                        <form id="answerForm" method="POST" action="{{ url_for('check_answer') }}">
+                            <textarea name="interpretation" placeholder="Enter your version of the story..." maxlength="{{ mystery.solution|length }}"></textarea>
+                            <button type="submit">Submit Answer</button>
+                        </form>
+                    </div>
+                    <div id="resultSection" style="display: none;">
+                        <!-- Result content will be populated here -->
+                    </div>
                 </div>
             </div>
         </div>
         
+        <!-- Right Side Ad Placeholder -->
+        <div class="ad-placeholder side-ad right-ad">YOUR AD</div>
     </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>

@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function updateQuestionsLeft() {
         const questionsLeft = 15 - parseInt(localStorage.getItem('questions_asked') || '0');
-        document.querySelector('.info-bar .questions-left').textContent = `${questionsLeft} questions left`;
+        document.querySelector('.info-bar .questions-left').textContent = `${questionsLeft}`;
     }
 
 });

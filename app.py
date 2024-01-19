@@ -52,6 +52,7 @@ def get_css_class_for_answer(answer):
         'YES': 'answer-yes',
         'NO': 'answer-no',
         'Irrelevant': 'answer-irrelevant',
+        'Ambiguous': 'answer-irrelevant',
         'Omitted': 'answer-omitted'
     }
     return classes.get(answer, 'answer-default')
@@ -66,6 +67,7 @@ def ask_question():
     
     # Check if yes-or-no question
     question_type, omit_cost = omit_question(question)
+    print("question_type:", question_type)
     response_cost = 0
     reasoning = ""
     response = ""
@@ -91,8 +93,12 @@ def ask_question():
         response = "YES"
     elif "no" in response.lower():
         response = "NO"
-    else:
+    elif "irrelevant" in response.lower():
         response = "Irrelevant"
+    elif "ambiguous" in response.lower():
+        response = "Ambiguous"
+    else:
+        response = "Omitted"
 
     # Print reasoning to terminal
     print("Reasoning:", reasoning)

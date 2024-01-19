@@ -37,6 +37,8 @@ body, html {
 }
 
 .wrapper {
+    max-width: calc(100% - 320px); /* Subtract total width of both side ads */
+    margin: auto; /* Center the wrapper */
     text-align: center;
     padding: 20px;
 }
@@ -283,7 +285,7 @@ input:checked + .slider:before {
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    width: 65%;
 }
 
 .close {
@@ -330,4 +332,60 @@ input:checked + .slider:before {
     object-fit: contain; /* Ensures the aspect ratio is maintained */
     margin: auto; /* Centers the image */
     display: block; /* Ensures the image is block level to center properly */
+}
+
+/* Ad Placeholder General Styles */
+.ad-placeholder {
+    text-align: center;
+    background-color: #ddd;
+    margin-bottom: 10px;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Top Ad Placeholder Styles */
+.top-ad {
+    height: 80px;
+    width: 100%;
+}
+
+/* Side Ad Placeholder Styles */
+.side-ad {
+    width: 160px;
+    height: 600px;
+    position: fixed;
+}
+
+.left-ad {
+    left: 0;
+}
+
+.right-ad {
+    right: 0;
+}
+
+.main-content-wrapper {
+    display: flex;
+    justify-content: center; /* Center main content */
+    margin-left: 160px; /* Left margin equal to left ad width */
+    margin-right: 160px; /* Right margin equal to right ad width */
+    position: relative; /* Needed for proper layout */
+}
+
+/* Hide side ads on smaller screens */
+@media screen and (max-width: 900px) {
+    .side-ad {
+        display: none;
+    }
+
+    .main-content-wrapper {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .wrapper {
+        max-width: 100%; /* Allow wrapper to use full width on small screens */
+    }
 }
