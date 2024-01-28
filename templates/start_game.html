@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body data-questions-asked="{{ session.get('questions_asked', 0) }}">
+<body data-solution-image="{{ session['solution_details']['image_url'] }}" data-solution-text="{{ session['solution_details']['solution_text'] }}" data-questions-asked="{{ session.get('questions_asked', 0) }}">
     <!-- Top Ad Placeholder -->
     <div class="ad-placeholder top-ad">YOUR AD</div>
     
@@ -39,9 +39,8 @@
             </div>
 
             {% if session.get('questions_asked', 0) < 15 %}
-                <form method="POST" action="{{ url_for('ask_question') }}">
-                    <input class="word" type="text" name="question" placeholder="Ask a yes-or-no question" autocapitalize="off" autocomplete="off" enterkeyhint="send" maxlength="70">
-                    <button type="submit">Ask</button>
+                <form method="POST" action="{{ url_for('ask_question') }}" style="margin-bottom: 20px;">
+                    <input class="word" type="text" name="question" placeholder="Ask a yes-or-no question" autocapitalize="off" autocomplete="off" enterkeyhint="send" maxlength="70" >
                 </form>
             {% else %}
                 <!-- Get more questions button -->
@@ -67,7 +66,7 @@
                 <!-- How to Play -->
                 <div class="row-wrapper collapsible">
                     <div class="row collapsible-header" data-target="howToPlayContent">
-                        <span>How to Play</span><span class="expand-icon">...</span>
+                        <span>How to Play</span><span class="expand-icon"></span>
                     </div>
                     <div id="howToPlayContent" class="collapsible-content">
                         <p>Find the secret story behind the vague description, by only asking yes-or-no questions.</p>
@@ -80,7 +79,7 @@
                 <!-- How is the Answer Evaluated? -->
                 <div class="row-wrapper collapsible">
                     <div class="row collapsible-header" data-target="answerEvalContent">
-                        <span>How is the Answer Evaluated?</span><span class="expand-icon">...</span>
+                        <span>How is the Answer Evaluated?</span><span class="expand-icon"></span>
                     </div>
                     <div id="answerEvalContent" class="collapsible-content">
                         <!-- Answer Evaluation content goes here -->
@@ -90,7 +89,7 @@
                 <!-- Tips and Tricks -->
                 <div class="row-wrapper collapsible">
                     <div class="row collapsible-header" data-target="tipsTricksContent">
-                        <span>Tips and Tricks</span><span class="expand-icon">...</span>
+                        <span>Tips and Tricks</span><span class="expand-icon"></span>
                     </div>
                     <div id="tipsTricksContent" class="collapsible-content">
                         <!-- Tips and Tricks content goes here -->
@@ -100,7 +99,7 @@
                 <!-- Credits -->
                 <div class="row-wrapper collapsible">
                     <div class="row collapsible-header" data-target="creditsContent">
-                        <span>Credits</span><span class="expand-icon">...</span>
+                        <span>Credits</span><span class="expand-icon"></span>
                     </div>
                     <div id="creditsContent" class="collapsible-content">
                         <!-- Credits content goes here -->
@@ -149,14 +148,37 @@
                 <!-- Modal content -->
                 <div class="modal-content">
                     <span class="close">&times;</span>
+                    <div id="termometer">
+                        <div id="temperature" style="height:0" data-value="0°C"></div>
+                        <div class="graduation" style="top: 20%;"></div>
+                        <div class="graduation" style="top: 35%;"></div>
+                        <div class="graduation" style="top: 50%;"></div>
+                        <div class="graduation" style="top: 65%;"></div>
+                        <div class="graduation" style="top: 80%;"></div>
+                    </div>
                     <div id="submitAnswerSection">
                         <form id="answerForm" method="POST" action="{{ url_for('check_answer') }}">
-                            <textarea name="interpretation" placeholder="Enter your version of the story..." maxlength="{{ mystery.solution|length }}"></textarea>
-                            <button type="submit">Submit Answer</button>
+                            <textarea class="word" name="interpretation" placeholder="Enter your version of the story..." maxlength="{{ mystery.solution|length }}"></textarea>
+                            <button type="submit">Verify</button>
                         </form>
                     </div>
-                    <div id="resultSection" style="display: none;">
-                        <!-- Result content will be populated here -->
+                    <div class="bottom-section">
+                        <div id="tipMessage"> Today's average score: 68°C</div>
+                        <button id="seeSolutionButton">Solution</button>
+                    </div>
+                </div>
+                    
+                <!-- New modal for solution -->
+                <div id="solutionModal" class="modal" style="display: none;">
+                    <div class="modal-content" style="width: min(65%, 425px);">
+                        <span class="close">&times;</span>
+                        <div class="solution-text">
+                            <h3>Solution</h3>
+                            <p></p> <!-- Solution text will be set dynamically -->
+                        </div>
+                        <div class="solution-visualization">
+                            <img src="" alt="Solution Visualization"> <!-- Image URL will be set dynamically -->
+                        </div>
                     </div>
                 </div>
             </div>

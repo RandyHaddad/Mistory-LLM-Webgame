@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session, redirect, url_for
 from dotenv import load_dotenv
 from mysteries_data import mysteries
 from openai_integration import omit_question, generate_response, evaluate_interpretation
+from presets import getPreset
 import openai
 import os
 import re
@@ -30,13 +31,24 @@ def select_mystery():
 @app.route('/start_game', methods=['GET', 'POST'])
 def start_game():
     if request.method == 'POST':
-        difficulty = request.form['difficulty']
-        session['selected_mystery'] = mysteries[difficulty]
+        id = request.form['id']
+        session['selected_mystery'] = mysteries[id]
         session['qa_history'] = []  # Initialize or reset the Q&A history
         session['guess_count'] = 0
         session['questions_left'] = 15
+        # Store the solution details in the session
+        session['solution_details'] = {
+            'image_url': mysteries[id].get('image_url', ''),
+            'solution_text': mysteries[id].get('solution', '')
+        }
 
     selected_mystery = session.get('selected_mystery')
+        # Ensure solution_details are set in the session
+    if 'solution_details' not in session:
+        session['solution_details'] = {
+            'image_url': selected_mystery.get('image_url', ''),
+            'solution_text': selected_mystery.get('solution', '')
+        }
 
     if 'qa_history' not in session:
         session['qa_history'] = []  # Initialize qa_history if not present
@@ -57,52 +69,7 @@ def get_css_class_for_answer(answer):
     }
     return classes.get(answer, 'answer-default')
 
-
-@app.route('/ask_question', methods=['POST'])
-def ask_question():
-    question = request.form['question']
-    selected_mystery = session.get('selected_mystery')
-    if not selected_mystery:
-        return "No mystery selected."
-    
-    # Check if yes-or-no question
-    question_type, omit_cost = omit_question(question)
-    print("question_type:", question_type)
-    response_cost = 0
-    reasoning = ""
-    response = ""
-    no_response = True
-    if "true" not in question_type.lower():
-        response = "Omitted"
-        no_response = False
-    else:
-        # Generate the response and split it
-        response, response_cost = generate_response(question, selected_mystery)
-        split_string = re.split('Response:|Response :', response)
-        reasoning = split_string[0].strip() if len(split_string) > 1 else ""
-        response = split_string[1].strip() if len(split_string) > 1 else response.strip()
-        no_response = False
-
-    # Accumulate the cost
-    cost = omit_cost + response_cost  
-
-    # Transform the response if it contains specific keywords
-    if "please ask" in response.lower() or no_response or "omitted" in response.lower():
-        response = "Omitted"
-    elif "yes" in response.lower():
-        response = "YES"
-    elif "no" in response.lower():
-        response = "NO"
-    elif "irrelevant" in response.lower():
-        response = "Irrelevant"
-    elif "ambiguous" in response.lower():
-        response = "Ambiguous"
-    else:
-        response = "Omitted"
-
-    # Print reasoning to terminal
-    print("Reasoning:", reasoning)
-
+def update_session_and_log(question, response, reasoning, cost):
     # Get the current QA history from the session, or initialize if not present
     qa_history = session.get('qa_history', [])
     qa_history.append({
@@ -121,7 +88,47 @@ def ask_question():
     log_entry = f"Question: {question}, AI Response: {response}, AI Reasoning: {reasoning}"
     log_interaction(log_entry, cost)
 
-    # Redirect back to the game page with updated session data
+
+
+@app.route('/ask_question', methods=['POST'])
+def ask_question():
+    question = request.form['question']
+    selected_mystery = session.get('selected_mystery')
+
+    if not selected_mystery:
+        return "No mystery selected."
+    
+    preset = getPreset(question, selected_mystery)
+    if preset != "proceed":
+        update_session_and_log(question, "Omitted", preset, 0)
+        return redirect(url_for('start_game'))
+
+    question_type, omit_cost = omit_question(question)
+    if "true" not in question_type.lower():
+        update_session_and_log(question, "Omitted", "Question Type Omitted", omit_cost)
+        return redirect(url_for('start_game'))
+
+    response, response_cost = generate_response(question, selected_mystery)
+    split_string = re.split('Response:|Response :', response)
+    reasoning = split_string[0].strip() if len(split_string) > 1 else ""
+    response = split_string[1].strip() if len(split_string) > 1 else response.strip()
+
+    if "please ask" in response.lower() or "omitted" in response.lower():
+        response = "Omitted"
+
+    # Transform response based on keywords
+    response_keywords = {
+        "yes": "YES", 
+        "no": "NO",
+        "irrelevant": "Irrelevant",
+        "ambiguous": "Ambiguous"
+    }
+    for keyword, transformed_response in response_keywords.items():
+        if keyword in response.lower():
+            response = transformed_response
+            break
+
+    update_session_and_log(question, response, reasoning, omit_cost + response_cost)
     return redirect(url_for('start_game'))
 
 from flask import jsonify

@@ -1,4 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
+
+    // Set the solution details from data attributes
+    window.solutionDetails = {
+        imageUrl: document.body.getAttribute('data-solution-image'),
+        text: document.body.getAttribute('data-solution-text')
+    };
+
+    function adjustBodyHeight() {
+        document.body.style.height = 'auto';
+        if (window.innerHeight < document.body.scrollHeight) {
+            document.body.style.height = document.body.scrollHeight + 'px';
+        }
+    }
+    
+    // Run the function on load and on resize
+    adjustBodyHeight();
+    window.addEventListener('resize', adjustBodyHeight);
+    
     // Retrieve initial questions asked count from the HTML data attribute
     const initialQuestionsAsked = document.body.getAttribute('data-questions-asked');
     localStorage.setItem('questions_asked', initialQuestionsAsked);
@@ -28,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var content = this.nextElementSibling;
             var isExpanded = content.style.display === 'block';
             content.style.display = isExpanded ? 'none' : 'block';
-            this.querySelector('.expand-icon').textContent = isExpanded ? '...' : '▲';
+            this.classList.toggle('expanded', !isExpanded);
         });
     });
 
@@ -47,53 +65,91 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.style.display = 'none';
     };
 
-    // Close modal on outside click
-    window.onclick = function(event) {
-        if (event.target === modal) {
-            modal.style.display = 'none';
+    // Function to update tip message
+    function updateTipMessage(temperature) {
+        const tipMessageDiv = document.getElementById('tipMessage');
+        if (temperature < 20) {
+            tipMessageDiv.textContent = "That's chilly. Keep asking.";
+        } else if (temperature < 40) {
+            tipMessageDiv.textContent = "Still far. Try again.";
+        } else if (temperature < 60) {
+            tipMessageDiv.textContent = "Could do better. Think.";
+        } else if (temperature < 80) {
+            tipMessageDiv.textContent = "Getting close. Push further.";
+        } else if (temperature < 90) {
+            tipMessageDiv.textContent = "Burning. What's missing?";
+        } else if (temperature === 100) {
+            tipMessageDiv.textContent = "That's it! You got it.";
         }
-    };
+    }
 
     // AJAX form submission logic
     var answerForm = document.getElementById('answerForm');
     answerForm.addEventListener('submit', function(event) {
         event.preventDefault();
         var formData = new FormData(this);
-
+    
         fetch(answerForm.action, {
             method: 'POST',
             body: formData
         })
         .then(response => response.json())
         .then(data => {
-            // Hide the submit answer section
-            document.getElementById('submitAnswerSection').style.display = 'none';
-            
-            // Populate and show the result section
-            var resultSection = document.getElementById('resultSection');
-            resultSection.innerHTML = `
-                <div class="thermometer-container">
-                    <div class="thermometer">
-                        <div class="temperature" style="height: ${data.accuracy_rating}%;"></div>
-                    </div>
-                    <div class="temperature-label">${data.accuracy_rating}%</div>
-                </div>
-                <div class="solution-visualization">
-                    <img src="${data.solution_image_url}" alt="Solution Visualization">
-                </div>
-                <div class="solution-text">
-                    <h3>Full Solution</h3>
-                    <p>${data.solution_text}</p>
-                </div>
-            `;
-            resultSection.style.display = 'block';
+            // Update the thermometer
+            var temperatureValue = parseInt(data.accuracy_rating);
+            var temperatureDiv = document.getElementById('temperature');
+            temperatureDiv.style.height = `${data.accuracy_rating}%`;
+            temperatureDiv.dataset.value = data.accuracy_rating + "°C"; // Assuming Celcius for now
+
+            updateTipMessage(temperatureValue); // Update the tip message based on temperature
         })
         .catch(error => {
             console.error('Error:', error);
         });
-        
-    });
+    });        
+    var seeSolution = document.getElementById('seeSolutionButton');
+    seeSolution.addEventListener('click', function() {
 
+        // Populate and show the solution modal
+        var solutionModal = document.getElementById('solutionModal');
+        solutionModal.querySelector('.solution-visualization img').src = window.solutionDetails.imageUrl;
+        solutionModal.querySelector('.solution-text p').textContent = window.solutionDetails.text;
+        solutionModal.style.display = 'block';
+    });
+    
+    // Add close functionality to the solution modal
+    var solutionModal = document.getElementById('solutionModal');
+    var solutionModalClose = solutionModal.querySelector('.close');
+    solutionModalClose.addEventListener('click', function() {
+        solutionModal.style.display = 'none';
+    });
+    
+    // Combined Modal Closing Logic
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+        if (event.target === solutionModal) {
+            solutionModal.style.display = 'none';
+            modal.style.display = 'none';
+        }
+        if (event.target === adModal) {
+            adModal.style.display = 'none';
+        }
+    };
+    
+    // Close Button for Answer Modal
+    var spanAnswerModal = modal.getElementsByClassName('close')[0];
+    spanAnswerModal.onclick = function() {
+        modal.style.display = 'none';
+    };
+    
+    // Close Button for Solution Modal
+    var spanSolutionModal = solutionModal.getElementsByClassName('close')[0];
+    spanSolutionModal.onclick = function() {
+        solutionModal.style.display = 'none';
+    };
+    
     // Update questions left count
     updateQuestionsLeft();
     

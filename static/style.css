@@ -1,3 +1,8 @@
+/* Ensure scrollbar is always visible */
+html {
+    overflow-y: scroll;
+}
+
 /* Base Styles */
 :root {
     --primary-bg-color-light: #eee;
@@ -28,7 +33,7 @@
 .dark-mode .answer-omitted { background-color: var(--grey-dark); }
 
 body, html {
-    height: 100%;
+    height: 100vh;
     min-height: 100vh;
     margin: 0;
     font-family: 'Ubuntu', sans-serif;
@@ -37,7 +42,7 @@ body, html {
 }
 
 .wrapper {
-    max-width: calc(100% - 320px); /* Subtract total width of both side ads */
+    max-width: min(80%, 600px); 
     margin: auto; /* Center the wrapper */
     text-align: center;
     padding: 20px;
@@ -55,30 +60,34 @@ body, html {
     font-weight: bold;
 }
 
-/* Form and Input Styles */
-form {
-    margin-bottom: 20px;
-}
-
-input.word, button {
+input.word, textarea.word, button {
     padding: 10px;
     margin-right: 5px;
     border-radius: 5px;
 }
 
-input.word {
+input.word, textarea.word {
     border: 1px solid #ddd;
+    font-family: 'Ubuntu', sans-serif;
+    width: 300px;
+}
+
+/* Style for placeholder in both input and textarea */
+input.word::placeholder, textarea.word::placeholder {
+    color: #999; /* Placeholder text color */
+    font-family: 'Ubuntu', sans-serif;
 }
 
 button {
-    background-color: var(--teal);
+    background-color: var(--grey);
     color: white;
     border: none;
     cursor: pointer;
+    font-family: 'Ubuntu', sans-serif;
 }
 
 button:hover {
-    background-color: var(--green-dark);
+    background-color: var(--grey-dark);
 }
 
 /* Content Styles */
@@ -142,7 +151,7 @@ button:hover {
 body.dark-mode {
     background-color: var(--primary-bg-color-dark);
     color: var(--primary-text-color-dark);
-    min-height: 100vh; /* Ensure it covers the entire viewport height */
+    min-height: 100vh;
 }
 
 .dark-mode .top-bar, 
@@ -172,6 +181,10 @@ body.dark-mode {
 
 .dark-mode .row-wrapper.current {
     border: 2px solid #ffffff; /* Example: white border for dark mode */
+}
+
+.dark-mode .modal-content{
+    background-color: #444;
 }
 
 /* Toggle Switch Styles */
@@ -235,6 +248,11 @@ input:checked + .slider:before {
     top: 10px;
     right: 10px;
 }
+@media screen and (min-width: 1070px) {
+    #darkModeSwitch {
+        right: calc(50% - 365px);
+    }
+}
 
 /* General Styles for Collapsible Sections */
 .collapsible {
@@ -245,15 +263,26 @@ input:checked + .slider:before {
 }
 
 .collapsible-header {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px; /* Match your row padding */
 }
 
-.collapsible-header .expand-icon {
-    /* Style for the ellipsis icon */
+.collapsible-header::before {
+    content: '+';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
     font-size: 1.2em;
+    transition: transform 0.3s ease;
+}
+
+/* Rotate the + icon to × when collapsible is expanded */
+.collapsible-header.expanded::before {
+    transform: translateY(-50%) rotate(45deg);
 }
 
 .collapsible-content {
@@ -282,10 +311,12 @@ input:checked + .slider:before {
 
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
+    margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 65%;
+    width: fit-content;
+    border-radius: 10px;
+    margin-top: 100px;
 }
 
 .close {
@@ -310,20 +341,6 @@ input:checked + .slider:before {
     display: inline-block;
     border: 1px solid #ccc;
     box-sizing: border-box;
-}
-
-.modal-content button {
-    background-color: #04AA6D;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-}
-
-.modal-content button:hover {
-    opacity: 0.8;
 }
 
 .solution-visualization img {
@@ -374,8 +391,12 @@ input:checked + .slider:before {
     position: relative; /* Needed for proper layout */
 }
 
+.dark-mode .main-content-wrapper{
+    background-color: var(--primary-bg-color-dark);
+}
+
 /* Hide side ads on smaller screens */
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 800px) {
     .side-ad {
         display: none;
     }
@@ -388,4 +409,121 @@ input:checked + .slider:before {
     .wrapper {
         max-width: 100%; /* Allow wrapper to use full width on small screens */
     }
+}
+
+#getMoreQuestionsButton {
+    margin-bottom: 20px;
+}
+
+/* Thermometer styles */
+#termometer {
+    margin: auto;
+    width: 25px;
+    background: var(--grey); /* Adjusted for regular CSS */
+    height: 240px;
+    position: relative;
+    border: 9px solid #33333d; /* Adjusted for regular CSS */
+    border-radius: 20px;
+    z-index: 1;
+    margin-bottom: 50px; /* Adjusted for regular CSS */
+  }
+  
+  #termometer:before,
+  #termometer:after {
+    position: absolute;
+    content: "";
+    border-radius: 50%;
+  }
+  
+  #termometer:after {
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    background-color: #3dcadf;
+    border: 9px solid #33333d; /* Adjusted for regular CSS */
+    bottom: -41px; /* Adjusted for regular CSS */
+    left: 50%;
+    z-index: -3;
+  }
+  
+  #temperature {
+    bottom: 0;
+    background: linear-gradient(#f17a65, #3dcadf) no-repeat bottom;
+    width: 100%;
+    border-radius: 20px;
+    background-size: 100% 240px;
+    transition: all 0.2s ease-in-out;
+    position: absolute;
+  }
+  
+  #temperature:before,
+  #temperature:after {
+    position: absolute;
+  }
+  
+  #temperature:before {
+    content: attr(data-value);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    z-index: 2;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 1em;
+    line-height: 1;
+    transform: translateY(50%);
+    left: calc(100% + 10px); /* Adjusted for regular CSS */
+    top: calc(-1em + 5px - 10px); /* Adjusted for regular CSS */
+  }
+  
+  #temperature:after {
+    content: "";
+    border-top: 0.4545em solid transparent; /* Adjusted for regular CSS */
+    border-bottom: 0.4545em solid transparent; /* Adjusted for regular CSS */
+    border-right: 0.6667em solid rgba(0, 0, 0, 0.7); /* Adjusted for regular CSS */
+    left: 100%;
+    top: calc(-0.4545em + 5px); /* Adjusted for regular CSS */
+  }
+  
+  /* Center the content in the result section */
+#resultSection {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.graduation {
+    position: absolute;
+    width: 50%;
+    border-top: 2px solid rgba(0, 0, 0, 0.5);
+    left: 20%;
+    transform: translateX(-50%);
+}
+
+#answerForm {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#answerForm .word {
+    flex-grow: 1;
+    margin-right: 10px;
+    height: 35px;
+    width: 225px;
+}
+
+.bottom-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+#tipMessage {
+    margin-right: 10px; 
+}
+
+#seeSolutionButton {
+    margin-right: -5px;
 }
