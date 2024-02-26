@@ -6,6 +6,8 @@
     <title>Mistory</title>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icons/favicon.png') }}" type="image/png">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/favicon.png') }}">
 </head>
 <body data-solution-image="{{ session['solution_details']['image_url'] }}" data-solution-text="{{ session['solution_details']['solution_text'] }}" data-questions-asked="{{ session.get('questions_asked', 0) }}">
     <!-- Top Ad Placeholder -->
@@ -20,6 +22,12 @@
                     <h1>
                         Mistory
                     </h1>
+                    <h2 style=
+                        "font-size: small;
+                        opacity: 80%;
+                        margin-block-start: -0.17em;">      
+                        Designed by ChatGPT
+                    </h2>
                 </div>
                 <!-- Dark Mode Toggle Button -->
                 <label class="switch" id="darkModeSwitch">
@@ -69,9 +77,9 @@
                         <span>How to Play</span><span class="expand-icon"></span>
                     </div>
                     <div id="howToPlayContent" class="collapsible-content">
-                        <p>Find the secret story behind the vague description, by only asking yes-or-no questions.</p>
+                        <p>Find the secret story behind the given description, by only asking yes-or-no questions.</p>
                         <p>The secret story has all the specific details you need to uncover. It generally includes details about the characters, location, events, and motivations.</p>
-                        <p>Behind the scenes, an artificial intelligence is provided with the solution. It answers your questions with "Yes", "No", "Irrelevant", or "Ambiguous"; it interprets the story as a person typically would.</p>
+                        <p>Behind the scenes, an artificial intelligence is provided with the solution. It answers your questions with either "Yes", "No", "Irrelevant", or "Omitted". It generally interprets the story like a human — but not always!</p>
                         <p>Consider the essential elements: who, what, when, where, why. Be efficient in your questions, and most importantly, think outside the box!</p>
                     </div>
                 </div>
@@ -163,7 +171,8 @@
                         </form>
                     </div>
                     <div class="bottom-section">
-                        <div id="tipMessage"> Today's average score: 68°C</div>
+                        <div id="tipMessage"> The score is based on the AI's interpretation.<br>
+                            It might not be the same as a human.</div>
                         <button id="seeSolutionButton">Solution</button>
                     </div>
                 </div>

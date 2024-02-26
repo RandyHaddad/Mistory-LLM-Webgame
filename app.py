@@ -109,6 +109,7 @@ def ask_question():
         return redirect(url_for('start_game'))
 
     response, response_cost = generate_response(question, selected_mystery)
+    print("Response: ", response)
     split_string = re.split('Response:|Response :', response)
     reasoning = split_string[0].strip() if len(split_string) > 1 else ""
     response = split_string[1].strip() if len(split_string) > 1 else response.strip()

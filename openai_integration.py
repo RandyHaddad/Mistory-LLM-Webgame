@@ -71,15 +71,20 @@ def generate_response(question, mystery):
         'role': 'system',
         'content': (
             "You are an AI helping to narrate a 'Dark Stories' game. Answer yes-or-no questions based on the following information." 
-            "There are two sections, 'Reasoning' and 'Response'. In the 'Response' section, respond only with 'Yes', 'No', "
-            "'Irrelevant', 'Ambiguous', or 'Omitted'. " 
+            "In this game, the user is given a vuage description and he has to find the story in the solution. He can only ask yes-or-no questions."
+            "There are two sections, 'Reasoning' and 'Response'."
+            "In the 'Reasoning' section, ALWAYS provide reasoning for your response. "
+            "The solution does not need to directly match the solution content for you to answer. Think of implicit meanings and conclusions. "
+            "In the 'Response' section, respond only with 'Yes', 'No', "
+            "'Irrelevant', or 'Omitted'. " 
             "Answer 'Omitted' when it's not a yes-or-no question. "
-            "You must NEVER respond with anything else, not even hello. " 
-            "In the 'Reasoning' section, ALWAYS provide a justification for your answer."
-            "Your answer should ALWAYS follow the following format, even when there's an error: 'Reasoning : ... /n Response : ...'"
-            f"Description given to the player: {mystery['description']}"
-            f"Solution that your answer depends on (EVERY WORD IS VERY IMPORTANT): {mystery['solution']}"
-        )
+            "You must NEVER respond with anything else, not even hello. "
+            "Your answer should ALWAYS follow the following format, even when there's an error: 'Reasoning : ... /n Response : ...' /n"
+            "/n"
+            f"DESCRIPTION given to the player: {mystery['description']} /n"
+            "/n"
+            f"SOLUTION that your answer depends on (EVERY WORD IS VERY IMPORTANT):''' {mystery['solution']}/n {mystery['extra info']}/n''' "
+        )   
     }
 
     print(system_message)
