@@ -7,6 +7,7 @@ import openai
 import os
 import re
 import datetime
+import random
 
 load_dotenv()
 openai.api_key = os.getenv('OPENAI_API_KEY')
@@ -30,34 +31,27 @@ def select_mystery():
 
 @app.route('/start_game', methods=['GET', 'POST'])
 def start_game():
-    if request.method == 'POST':
-        id = request.form['id']
-        session['selected_mystery'] = mysteries[id]
-        session['qa_history'] = []  # Initialize or reset the Q&A history
+    # Check if a mystery is already selected and not explicitly changing it
+    if 'selected_mystery_id' not in session or 'change_mystery' in request.form:
+        if request.method == 'POST' and 'id' in request.form:
+            # The ID is provided through the form submission.
+            mystery_id = request.form['id']
+        else:
+            # Select a random mystery ID if no ID is provided in the form, or changing the mystery.
+            mystery_id = str(random.randint(1, len(mysteries)))
+        session['selected_mystery_id'] = mystery_id
+        session['selected_mystery'] = mysteries[mystery_id]
+        session['qa_history'] = []  # Initialize or reset the Q&A history.
         session['guess_count'] = 0
         session['questions_left'] = 15
-        # Store the solution details in the session
+        # Store the solution details in the session.
         session['solution_details'] = {
-            'image_url': mysteries[id].get('image_url', ''),
-            'solution_text': mysteries[id].get('solution', '')
+            'image_url': mysteries[mystery_id].get('image_url', ''),
+            'solution_text': mysteries[mystery_id].get('solution', '')
         }
-
-    selected_mystery = session.get('selected_mystery')
-        # Ensure solution_details are set in the session
-    if 'solution_details' not in session:
-        session['solution_details'] = {
-            'image_url': selected_mystery.get('image_url', ''),
-            'solution_text': selected_mystery.get('solution', '')
-        }
-
-    if 'qa_history' not in session:
-        session['qa_history'] = []  # Initialize qa_history if not present
-
-    if not selected_mystery:
-        return "Invalid Access"
-
-    # Render the game template whether it's a POST or GET request
-    return render_template('start_game.html', game_title="MISTORI", mystery=selected_mystery)
+    else:
+        mystery_id = session['selected_mystery_id']
+    return render_template('start_game.html', game_title="MISTORY", mystery=session['selected_mystery'], total_mysteries=len(mysteries))
 
 def get_css_class_for_answer(answer):
     classes = {
@@ -87,8 +81,6 @@ def update_session_and_log(question, response, reasoning, cost):
     # Log the interaction with cost
     log_entry = f"Question: {question}, AI Response: {response}, AI Reasoning: {reasoning}"
     log_interaction(log_entry, cost)
-
-
 
 @app.route('/ask_question', methods=['POST'])
 def ask_question():
@@ -182,4 +174,4 @@ def add_questions():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)

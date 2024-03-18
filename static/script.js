@@ -205,3 +205,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 });
+
+document.querySelector('.dropdown-trigger').addEventListener('click', function() {
+    const dropdown = document.querySelector('.dropdown');
+    dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const changeMysteryButton = document.querySelector('.change-mystery-trigger');
+    const mysteryDropdown = document.querySelector('.mystery-dropdown');
+
+    changeMysteryButton.addEventListener('click', () => {
+        // Toggle display of the secondary dropdown or modal
+        mysteryDropdown.style.display = mysteryDropdown.style.display === 'none' ? 'block' : 'none';
+    });
+});

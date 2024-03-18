@@ -80,7 +80,7 @@ input.word::placeholder, textarea.word::placeholder {
 
 button {
     background-color: var(--grey);
-    color: white;
+    color: var(--primary-text-color-light);
     border: none;
     cursor: pointer;
     font-family: 'Ubuntu', sans-serif;
@@ -250,7 +250,7 @@ input:checked + .slider:before {
 }
 @media screen and (min-width: 1070px) {
     #darkModeSwitch {
-        right: calc(50% - 365px);
+        right: calc(50% - 300px);
     }
 }
 
@@ -527,3 +527,61 @@ input:checked + .slider:before {
 #seeSolutionButton {
     margin-right: -5px;
 }
+
+/* Dropdown Trigger Button */
+.dropdown-trigger {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    border: none;
+    cursor: pointer;
+    z-index: 1002;
+}
+
+/* Dropdown Menu */
+.dropdown {
+    border-radius: 10px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.075), 0 2px 2px rgba(0,0,0,.075), 0 4px 4px rgba(0,0,0,.075), 0 8px 8px rgba(0,0,0,.075), 0 16px 16px rgba(0,0,0,.075);
+    padding: 10px;
+    position: absolute;
+    top: 70px; /* Adjust based on the trigger button's size and position */
+    z-index: 1001;
+    display: none; /* Initially hidden */
+    background-color: var(--grey);
+    left: 10px;
+}
+
+.dark-mode .dropdown{
+    background-color:  #333;
+}
+
+/* Menu Item */
+.menu-item {
+    display: flex;
+    border: none;
+    align-items: center;
+    text-align: center;
+    width: 90%;
+    padding: 8px;
+    cursor: pointer;
+    margin: 10px;
+    background-color: transparent;
+}
+
+.menu-item:hover {
+    background-color: #f0f0f0; /* Hover background color */
+}
+
+@media screen and (min-width: 1000px) {
+    .dropdown-trigger {
+        left: calc(50% - 300px);
+    }
+    .dropdown {
+        left: calc(50% - 300px);
+    }
+}
+
+.menu-item svg {
+    margin-right: 8px; /* Adjust the space as needed */
+}
+
