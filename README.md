@@ -1,7 +1,7 @@
 
-# MISTORI Game
+# Mistory Game
 
-MISTORI is a web-based game that challenges players to solve mysteries using yes-or-no questions. The AI-powered backend processes user queries and returns responses to guide the player towards the solution.
+Mistory is a web-based game that challenges players to solve mysteries using yes-or-no questions. The AI-powered backend processes user queries and returns responses to guide the player towards the solution.
 
 ## Getting Started
 
@@ -20,8 +20,8 @@ pip install flask
 Follow these steps to set up your development environment:
 
 ```bash
-git clone https://github.com/YourUsername/mistori.git
-cd mistori
+git clone https://github.com/YourUsername/Mistory.git
+cd Mistory
 pip install -r requirements.txt
 ```
 
