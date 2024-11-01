@@ -18,7 +18,7 @@ This is where players ask yes-or-no questions and interact with the AI-powered b
 In this part of the gameplay, players receive answers from the AI as they work to uncover clues. Each response is carefully prompt engineered to ensure that the user does not get confused.
 
 ### Show Answer
-![Show Answer](images/show_answer.png)
+![Show Answer](images/win_answer.PNG)
 
 This part of the interface reveals the answer after the player submits their final guess or opts to see the solution.
 
