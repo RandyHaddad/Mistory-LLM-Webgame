@@ -8,12 +8,12 @@ Mistory is a web-based game that challenges players to solve mysteries using yes
 Here’s a glimpse of Mistory’s interface and gameplay. The following images showcase the main game screen, question prompts, and response feedback:
 
 ### Main Interface
-![Main Interface](images/Main_interface.png)
+![Main Interface](images/Main_interface.PNG)
 
 This is where players ask yes-or-no questions and interact with the AI-powered backend. The clean and minimalist design helps players focus on solving the mystery.
 
 ### Gameplay Interaction
-![Gameplay Interaction](images/gameplay_interface.png)
+![Gameplay Interaction](images/gameplay_interface.PNG)
 
 In this part of the gameplay, players receive answers from the AI as they work to uncover clues. Each response is carefully prompt engineered to ensure that the user does not get confused.
 
