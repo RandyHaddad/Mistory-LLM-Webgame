@@ -81,7 +81,7 @@ We use [SemVer](http://semver.org/) for versioning.
 
 ## Authors
 
-* **Randy El Haddad** - [YourUsername](https://github.com/RandyHaddad)
+* **Randy El Haddad** - [RandyHaddad](https://github.com/RandyHaddad)
 
 ## License
 
