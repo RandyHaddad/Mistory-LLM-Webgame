@@ -41,7 +41,7 @@ pip install flask
 Follow these steps to set up your development environment:
 
 ```bash
-git clone https://github.com/YourUsername/Mistory.git
+git clone https://github.com/RandyHaddad/Mistory.git
 cd Mistory
 pip install -r requirements.txt
 ```
@@ -81,7 +81,7 @@ We use [SemVer](http://semver.org/) for versioning.
 
 ## Authors
 
-* **Your Name** - *Initial work* - [YourUsername](https://github.com/YourUsername)
+* **Randy El Haddad** - [YourUsername](https://github.com/RandyHaddad)
 
 ## License
 
