@@ -13,7 +13,7 @@ Here’s a glimpse of Mistory’s interface and gameplay. The following images s
 This is where players ask yes-or-no questions and interact with the AI-powered backend. The clean and minimalist design helps players focus on solving the mystery.
 
 ### Gameplay Interaction
-![image](https://github.com/user-attachments/assets/6d31239a-e7b8-4bde-97cf-e9aec60157ad)
+![image](https://github.com/user-attachments/assets/3bada437-887e-4be8-99db-668a568b4123)
 
 In this part of the gameplay, players receive answers from the AI as they work to uncover clues. Each response is carefully prompt engineered to ensure that the user does not get confused.
 
