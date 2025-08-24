@@ -22,63 +22,6 @@ In this part of the gameplay, players receive answers from the AI as they work t
 
 This part of the interface reveals the answer after the player submits their final guess or opts to see the solution.
 
-
-
-## Getting Started
-
-Clone the repository to get a local copy that you can run and test.
-
-### Prerequisites
-
-You'll need Python and Flask installed on your system. Optionally, set up a virtual environment to manage dependencies.
-
-```bash
-pip install flask
-```
-
-### Installing
-
-Follow these steps to set up your development environment:
-
-```bash
-git clone https://github.com/RandyHaddad/Mistory.git
-cd Mistory
-pip install -r requirements.txt
-```
-
-Run the Flask application:
-
-```bash
-flask run
-```
-
-Navigate to `localhost:5000` in your web browser to see the game in action.
-
-## Running the Tests
-
-To run automated tests, use the following command:
-
-```bash
-python -m unittest discover
-```
-
-## Deployment
-
-Deploy the application to a web server or cloud platform such as Heroku or AWS.
-
-## Built With
-
-* [Flask](https://flask.palletsprojects.com/) - The web framework used
-* [OpenAI](https://openai.com/api/) - AI service for generating responses
-
-## Contributing
-
-Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning.
-
 ## Authors
 
 * **Randy El Haddad** - [RandyHaddad](https://github.com/RandyHaddad)
