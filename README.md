@@ -26,12 +26,3 @@ This part of the interface reveals the answer after the player submits their fin
 
 * **Randy El Haddad** - [RandyHaddad](https://github.com/RandyHaddad)
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-* Thanks to OpenAI for providing the GPT-3 API.
-* Inspiration from traditional mystery-solving games.
-* The Flask community for their helpful resources.
